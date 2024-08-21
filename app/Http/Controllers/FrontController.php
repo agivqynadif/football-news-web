@@ -35,6 +35,14 @@ class FrontController extends Controller
             // ->take(1)
             ->first();
 
-        return view('front.index', compact('leagues', 'articles', 'authors', 'featured_articles', 'bannerads'));
+        $premier_league_articles = ArticleNews::whereHas('league', function ($query) {
+            $query->where('name', 'Premier League');
+        })
+            ->where('is_featured', 'not_featured')
+            ->latest()
+            ->take(6)
+            ->get();
+
+        return view('front.index', compact('leagues', 'articles', 'authors', 'featured_articles', 'bannerads', 'premier_league_articles'));
     }
 }
